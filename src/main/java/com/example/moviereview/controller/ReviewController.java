@@ -1,26 +1,36 @@
 package com.example.moviereview.controller;
 
-import com.example.moviereview.model.Review;
-import com.example.moviereview.service.ReviewService;
+import com.example.moviereview.model.Movie;
+import com.example.moviereview.service.MovieService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/reviews")
-public class ReviewController {
+@RequestMapping("/movies")
+public class MovieController {
 
-    private final ReviewService reviewService;
+    @Autowired
+    private MovieService movieService;
 
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
+    // Get all movies
+    @GetMapping
+    public List<Movie> getAllMovies() {
+        return movieService.getAllMovies();
     }
 
-    @PostMapping("/{movieId}")
-    public Review addReview(@PathVariable Long movieId, @RequestBody Review review) {
-        return reviewService.addReview(movieId, review);
+    // Add a new movie
+    @PostMapping
+    public Movie addMovie(@RequestBody Movie movie) {
+        return movieService.addMovie(movie);
     }
 
-    @PutMapping("/{reviewId}")
-    public Review updateReview(@PathVariable Long reviewId, @RequestBody Review review) {
-        return reviewService.updateReview(reviewId, review);
+    // Delete a movie by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMovie(@PathVariable Long id) {
+        movieService.deleteMovie(id);
+        return ResponseEntity.ok("Movie deleted successfully.");
     }
 }
